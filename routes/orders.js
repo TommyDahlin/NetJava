@@ -65,7 +65,7 @@ router.get("/orders/:id", (req, res) => {
 });
 
 // 3
-router.put("/orders/:id", (req, res) => { // Should be put because it can change multitudesd
+router.patch("/orders/:id", (req, res) => { 
   const order = orders.find((o) => o.id === parseInt(req.params.id));
   if (!order) {
     return res.status(404).json({ error: "Order not found" });
@@ -76,6 +76,7 @@ router.put("/orders/:id", (req, res) => { // Should be put because it can change
     order.updatedAt = new Date(); // Shows wrong time by one hour, should be offset by one hour +
     res.json(order);
   }, Math.random() * 1000); // Timeout is unnecessary and removing it makes endpoint go faster
+  // Does not stop if multiple calls
 });
 
 // 4
@@ -221,7 +222,7 @@ router.post("/orders/:id/start-process", (req, res) => {
 // Hjälpfunktion
 function calculate(item) {
   let result = 0;
-  for (let i = 0; i < 10000; i++) {
+  for (let i = 0; i < item; i++) {
     // Borde iterera items.quantity istället för 10000
     result += item.price * item.quantity;
   }
