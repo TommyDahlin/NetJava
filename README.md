@@ -5,38 +5,42 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
  ^^^^^ should be vvvvvv
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
- 1
-Sum should = item.price * item.quantity
- Should be new LocalTimeDate() otherwise shows wrong time by 1 hour
- Doesn't save to file, should be __dirname
+1 POST /api/orders
+Total Amount får summan av vad priset på ett item är, dvs endast kostnaden för ett item. Rätt lösning är att priset per item ska multipliceras med kvantiteten för att få rätt summa (item.price * item.quantity)
+Det finns inget som sparar en order, därav förblir orders.json tom. WriteOrdersToFile bör skrivas om till __dirname. 
+CreatedAt genererar felaktig tidsstämpel för lagd order, ändra detta till new LocalTimeDate().
 
- 2
- Doesn't log anything
+2 GET /api/orders/:id 
+Loggar ingenting
 
- 3
- Shows wrong time by one hour, should be offset by one hour +
- Timeout is unnecessary and removing it makes endpoint go faster
+3 PATCH /orders/:id 
+Endpoint bör ändras till PUT då den ändrar flera saker samtidigt.
+Visar en timmas tidsfel 
+Timeout kan plockas bort då det endast lägger till kompileringstid i onödan.
 
- 4
- doesn't add to order
-Doesn't save to file
+4 POST /orders/:id/process 
+Onödigt att beräkna belopp när totalbelopp redan finns
 
- 5
- Why have calculatedAmount when you already have totalAmount
+5 POST /orders/:id/calculate 
+Summan på calculate-funktionen blir felaktig. Loopen itererar 1000 gånger istället för items x quantity. 
 
- 6
- Uses query but is not configured to search on the fields customerId and status. Instead query is set to deafult which means it do searches on the ID field.
 
- 7
- Should be patch because it's just one thing
- Will always throw error because orders doesn't get saved to
- Should be "There are no orders"
+6 GET /orders 
+Använder ett query men är inte konfigurerad för att söka i fälten kund-ID och status. Istället är frågan inställd på standard, vilket betyder att den gör sökningar i ID-fältet.
 
- 8
+7 PUT /orders/:id 
+Bör vara en patch då den bara ändrar en grej 
+Kommer alltid att kasta fel eftersom beställningar inte sparas 
+Bör vara "Det finns inga beställningar"
 
- 9
+8 POST /orders/bulk-process 
+Fungerar inte då den är beroende av POST 1
 
- 10
- has no Error handling for null id param
- Hjälpfunktion
- Borde iterera items.quantity istället för 10000
+9 POST /orders/link/:id 
+
+10 POST /orders/:id/start-process 
+Har ingen felhantering för null id param
+POST går igenom oavsett om ID finns eller inte vilket är fel, då endpointen bör kräva att man har ett ID för att det ska fungera som tänkt. 
+
+Hjälpfunktionen Calcuate
+Bör iterera items.quantity istället för 10000
