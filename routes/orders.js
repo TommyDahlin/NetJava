@@ -96,7 +96,7 @@ router.post("/orders/:id/process", (req, res) => {
   eventEmitter.on("orderProcessed", (processedOrder) => {
     if (processedOrder.id === order.id) {
       order.status = "processed";
-      order.processedAt = new Date(); // doesn't add to order
+      order.processedAt = new Date(); 
     }
   });
 
