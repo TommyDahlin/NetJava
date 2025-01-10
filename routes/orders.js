@@ -109,7 +109,8 @@ router.post("/orders/:id/process", (req, res) => {
 });
 
 // 5
-router.post("/orders/:id/calculate", (req, res) => { // Why have calculatedAmount when you already have totalAmount
+router.post("/orders/:id/calculate", (req, res) => {
+  // Why have calculatedAmount when you already have totalAmount
   const order = orders.find((o) => o.id === parseInt(req.params.id));
   if (!order) {
     return res.status(404).json({ error: "Order not found" });
@@ -117,7 +118,7 @@ router.post("/orders/:id/calculate", (req, res) => { // Why have calculatedAmoun
 
   let result = 0;
   for (let i = 0; i < order.items.length; i++) {
-    result += calculate(order.items[i]); 
+    result += calculate(order.items[i]);
   }
 
   order.calculatedValue = result;
@@ -127,7 +128,8 @@ router.post("/orders/:id/calculate", (req, res) => { // Why have calculatedAmoun
 
 // 6
 router.get("/orders", (req, res) => {
-  const { customerId, status } = req.query; // Asks for query but doesn´t have it in the URL so you can't use it to filter
+  const customerId = req.query.customerId;
+  const status = req.query.status;
   let result = orders;
 
   if (customerId) {
@@ -142,7 +144,7 @@ router.get("/orders", (req, res) => {
 
 // 7
 router.put("/orders/:id", (req, res) => {
-  let orders = readOrdersFromFile();  
+  let orders = readOrdersFromFile();
 
   const index = orders.findIndex((o) => o.id === parseInt(req.params.id)); // Will always throw error because orders doesn't get saved to
   if (index === -1) {
@@ -201,7 +203,7 @@ router.post("/orders/link/:id", (req, res) => {
 let processingOrders = new Set();
 
 router.post("/orders/:id/start-process", (req, res) => {
-  const orderId = parseInt(req.params.id);   // has no Error handling for null id param
+  const orderId = parseInt(req.params.id); // has no Error handling for null id param
 
   if (processingOrders.has(orderId)) {
     return res.status(409).json({ error: "Already processing" });
@@ -212,7 +214,7 @@ router.post("/orders/:id/start-process", (req, res) => {
   setTimeout(() => {
     processingOrders.delete(orderId);
     res.json({ success: true });
-  }, 5000); 
+  }, 5000);
 });
 
 // Hjälpfunktion
