@@ -2,12 +2,14 @@ import express from "express";
 import { EventEmitter } from "events";
 import fs from "fs";
 import path from "path";
-import { URL } from "url";
+import { fileURLToPath } from "url";
 
 const router = express.Router();
 const eventEmitter = new EventEmitter();
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname); //Shouldnt be an URL should be new URI
+//const __dirname = path.dirname(new URL(import.meta.url).pathname); 
+// ^^^^^ should be vvvvvv
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 const decodedDirName = decodeURIComponent(__dirname);
 
@@ -25,7 +27,9 @@ const readOrdersFromFile = () => {
 
 const writeOrdersToFile = (orders) => {
   try {
-    fs.writeFileSync(ordersFilePath, JSON.stringify(orders, null, 2)); // replaces null
+    fs.writeFileSync(ordersFilePath, JSON.stringify(orders, null, 2));
+    console.log(path.dirname)
+
   } catch (err) {
     console.error("Error writing orders to file:", err);
   }
@@ -61,7 +65,7 @@ router.get("/orders/:id", (req, res) => {
 });
 
 // 3
-router.patch("/orders/:id", (req, res) => {
+router.put("/orders/:id", (req, res) => { // Should be put because it can change multitudesd
   const order = orders.find((o) => o.id === parseInt(req.params.id));
   if (!order) {
     return res.status(404).json({ error: "Order not found" });
@@ -76,7 +80,6 @@ router.patch("/orders/:id", (req, res) => {
 
 // 4
 router.post("/orders/:id/process", (req, res) => {
-  // Is a post, should be put
   const orderId = parseInt(req.params.id);
   const order = orders.find((o) => o.id === orderId);
 
@@ -141,7 +144,7 @@ router.get("/orders", (req, res) => {
 });
 
 // 7
-router.put("/orders/:id", (req, res) => {
+router.patch("/orders/:id", (req, res) => { // Should be patch because it's just one thing
   let orders = readOrdersFromFile();  
 
   const index = orders.findIndex((o) => o.id === parseInt(req.params.id)); // Will always throw error because orders doesn't get saved to

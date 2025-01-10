@@ -1,1 +1,36 @@
-[]
+[
+  {
+    "id": 1,
+    "items": [
+      {
+        "id": 1,
+        "price": 99.99,
+        "quantity": 2
+      }
+    ],
+    "customerId": "CUST123",
+    "totalAmount": 99.99,
+    "status": "Big status",
+    "createdAt": "2025-01-10T11:24:56.747Z",
+    "updatedAt": "2025-01-10T11:29:28.977Z",
+    "calculatedValue": 1999799.9999998442,
+    "processed": true,
+    "processedAt": "2025-01-10T11:27:12.193Z"
+  },
+  {
+    "id": 2,
+    "items": [
+      {
+        "id": 1,
+        "price": 99.99,
+        "quantity": 2
+      }
+    ],
+    "customerId": "CUST123",
+    "totalAmount": 99.99,
+    "status": "pending",
+    "createdAt": "2025-01-10T11:27:10.103Z",
+    "processed": true,
+    "processedAt": "2025-01-10T11:27:12.193Z"
+  }
+]
